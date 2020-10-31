@@ -67,6 +67,21 @@ function tablex.update (t1,t2)
     return t1
 end
 
+--- there are elements in this table.
+-- @tab t a table
+-- @return true - there are elements, false - table is empty
+function tablex.has_elements (t)
+    assert_arg_iterable(1,t)
+    local i = 0
+    for k in pairs(t) do
+		i = i + 1
+		break;
+	end
+    local ret = false;
+	if (i>0) then ret = true; else ret = false; end
+	return ret;
+end
+
 --- total number of elements in this table.
 -- Note that this is distinct from `#t`, which is the number
 -- of values in the array part; this value will always
