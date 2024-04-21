@@ -77,9 +77,7 @@ function tablex.has_elements (t)
 		i = i + 1;
 		if (i > 0) then break; end
 	end
-    local ret = false;
-	if (i>0) then ret = true; else ret = false; end
-	return ret;
+	if (i>0) then return true; else return false; end
 end
 
 --- total number of elements in this table.
