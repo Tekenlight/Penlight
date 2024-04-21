@@ -27,7 +27,8 @@
 <h1>Penlight</h1>
 
 <ul>
-  <li><a href="../index.html">Index</a></li>
+  <li><a href="https://github.com/lunarmodules/Penlight">GitHub Project</a></li>
+  <li><a href="../index.html">Documentation</a></li>
 </ul>
 
 <h2>Contents</h2>
@@ -134,11 +135,11 @@
 	<td class="summary">Return a list of all file names within an array which match a pattern.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getfiles">getfiles (dirname, mask)</a></td>
+	<td class="name" nowrap><a href="#getfiles">getfiles ([dirname='.'[, mask]])</a></td>
 	<td class="summary">return a list of all files in a directory which match a shell pattern.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getdirectories">getdirectories (dirname)</a></td>
+	<td class="name" nowrap><a href="#getdirectories">getdirectories ([dirname='.'])</a></td>
 	<td class="summary">return a list of all subdirectories of the directory.</td>
 	</tr>
 	<tr>
@@ -170,8 +171,8 @@
 	<td class="summary">return an iterator over all entries in a directory tree</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getallfiles">getallfiles (start_path, shell_pattern)</a></td>
-	<td class="summary">Recursively returns all the file starting at <em>path</em>.</td>
+	<td class="name" nowrap><a href="#getallfiles">getallfiles ([start_path='.'[, shell_pattern='*']])</a></td>
+	<td class="summary">Recursively returns all the file starting at 'path'.</td>
 	</tr>
 </table>
 
@@ -195,11 +196,11 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">filename</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
          A file name.
         </li>
         <li><span class="parameter">pattern</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
          A shell pattern. The only special characters are
  <code>&apos;*&apos;</code> and <code>&apos;?&apos;</code>: <code>&apos;*&apos;</code> matches any sequence of characters and
  <code>&apos;?&apos;</code> matches any single character.
@@ -232,12 +233,12 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">filenames</span>
-            <span class="types"><span class="type">tab</span></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.6">table</a></span>
          An array containing file names.
         </li>
         <li><span class="parameter">pattern</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-         A shell pattern.
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         A shell pattern (see <a href="../libraries/pl.dir.html#fnmatch">fnmatch</a>).
         </li>
     </ul>
 
@@ -256,7 +257,7 @@
 </dd>
     <dt>
     <a name = "getfiles"></a>
-    <strong>getfiles (dirname, mask)</strong>
+    <strong>getfiles ([dirname='.'[, mask]])</strong>
     </dt>
     <dd>
     return a list of all files in a directory which match a shell pattern.
@@ -265,19 +266,21 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">dirname</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-         A directory. If not given, all files in current directory are returned.
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         A directory.
+         (<em>default</em> '.')
         </li>
         <li><span class="parameter">mask</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-          A shell pattern. If not given, all files are returned.
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         A shell pattern (see <a href="../libraries/pl.dir.html#fnmatch">fnmatch</a>). If not given, all files are returned.
+         (<em>optional</em>)
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">{string}</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">{string}</a></span>
         list of files
     </ol>
 
@@ -289,7 +292,7 @@
 </dd>
     <dt>
     <a name = "getdirectories"></a>
-    <strong>getdirectories (dirname)</strong>
+    <strong>getdirectories ([dirname='.'])</strong>
     </dt>
     <dd>
     return a list of all subdirectories of the directory.
@@ -298,20 +301,21 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">dirname</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-         A directory
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         A directory.
+         (<em>default</em> '.')
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">{string}</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">{string}</a></span>
         a list of directories
     </ol>
 
     <h3>Raises:</h3>
-    dir must be a a valid directory
+    dir must be a valid directory
 
 
 
@@ -327,15 +331,15 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">src</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
          source file
         </li>
         <li><span class="parameter">dest</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
          destination file or directory
         </li>
         <li><span class="parameter">flag</span>
-            <span class="types"><span class="type">bool</span></span>
+            <span class="types"><span class="type">boolean</span></span>
          true if you want to force the copy (default)
         </li>
     </ul>
@@ -364,11 +368,11 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">src</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
          source file
         </li>
         <li><span class="parameter">dest</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
          destination file or directory
         </li>
     </ul>
@@ -404,15 +408,15 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">root</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
          A starting directory
         </li>
         <li><span class="parameter">bottom_up</span>
-            <span class="types"><span class="type">bool</span></span>
+            <span class="types"><span class="type">boolean</span></span>
          False if we start listing entries immediately.
         </li>
         <li><span class="parameter">follow_links</span>
-            <span class="types"><span class="type">bool</span></span>
+            <span class="types"><span class="type">boolean</span></span>
          follow symbolic links
         </li>
     </ul>
@@ -435,13 +439,14 @@
     </dt>
     <dd>
     remove a whole directory tree.
+ Symlinks in the tree will be deleted without following them.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">fullpath</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-         A directory path
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         A directory path (must be an actual directory, not a symlink)
         </li>
     </ul>
 
@@ -471,7 +476,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">p</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
          A directory path
         </li>
     </ul>
@@ -500,19 +505,19 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">path1</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
          the base path of the source tree
         </li>
         <li><span class="parameter">path2</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
          the new base path for the destination
         </li>
         <li><span class="parameter">file_fun</span>
-            <span class="types"><span class="type">func</span></span>
+            <span class="types"><span class="type">function</span></span>
          an optional function to apply on all files
         </li>
         <li><span class="parameter">verbose</span>
-            <span class="types"><span class="type">bool</span></span>
+            <span class="types"><span class="type">boolean</span></span>
          an optional boolean to control the verbosity of the output.
   It can also be a logging function that behaves like print()
         </li>
@@ -534,7 +539,7 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example">clonetree(<span class="string">'.'</span>,<span class="string">'../backup'</span>,copyfile)</pre>
+        <pre class="example"><span class="function-name">clonetree</span>(<span class="string">'.'</span>,<span class="string">'../backup'</span>,copyfile)</pre>
     </ul>
 
 </dd>
@@ -549,7 +554,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">d</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
          a directory
         </li>
     </ul>
@@ -568,22 +573,24 @@
 </dd>
     <dt>
     <a name = "getallfiles"></a>
-    <strong>getallfiles (start_path, shell_pattern)</strong>
+    <strong>getallfiles ([start_path='.'[, shell_pattern='*']])</strong>
     </dt>
     <dd>
-    Recursively returns all the file starting at <em>path</em>.  It can optionally take a shell pattern and
- only returns files that match <em>shell</em>pattern_. If a pattern is given it will do a case insensitive search.
+    Recursively returns all the file starting at 'path'.  It can optionally take a shell pattern and
+ only returns files that match 'shell_pattern'. If a pattern is given it will do a case insensitive search.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">start_path</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-          A directory. If not given, all files in current directory are returned.
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+          A directory.
+         (<em>default</em> '.')
         </li>
         <li><span class="parameter">shell_pattern</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-         A shell pattern. If not given, all files are returned.
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         A shell pattern (see <a href="../libraries/pl.dir.html#fnmatch">fnmatch</a>).
+         (<em>default</em> '*')
         </li>
     </ul>
 
@@ -591,7 +598,7 @@
     <ol>
 
            <span class="types"><a class="type" href="../classes/pl.List.html">List(string)</a></span>
-        containing all the files found recursively starting at <em>path</em> and filtered by <em>shell</em>pattern_.
+        containing all the files found recursively starting at 'path' and filtered by 'shell_pattern'.
     </ol>
 
     <h3>Raises:</h3>
@@ -606,8 +613,7 @@
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
-<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-09-25 12:08:46 </i>
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.5.0</a></i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

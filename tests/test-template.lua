@@ -46,6 +46,29 @@ asserteq(subst([[
 ]])
 
 
+--------------------------------------------------------------------------------
+-- Regression tests for issue #451 (can't use % for escapes)
+asserteq(subst([[
+% for i = 1,3 do
+    $(text[i])
+% end
+]],{_parent=_G,_escape='%',text={'foo','bar','baz'}}),[[
+    foo
+    bar
+    baz
+]])
+
+asserteq(subst([[
+? for i = 1,3 do
+    %(text[i])
+? end
+]],{_parent=_G,_escape='?',_inline_escape='%',text={'foo','bar','baz'}}),[[
+    foo
+    bar
+    baz
+]])
+--------------------------------------------------------------------------------
+
 
 -- handle templates with a lot of substitutions
 asserteq(subst(("$(x)\n"):rep(300), {x = "y"}), ("y\n"):rep(300))
@@ -161,7 +184,7 @@ local my_env = {
   ipairs = ipairs,
   T = {'one','two','three'}
 }
-local t, err = template.compile(tmpl, { debug = true, newline = "" })
+local t, err = template.compile(tmpl, { debug = true, newline = true })
 local res, err, code = t:render(my_env)
 --print(res, err, code)
 asserteq(res, [[some list: ONE,TWO,THREE]])
@@ -174,7 +197,7 @@ local tmpl = [[
 header: $("hello" * 10)
 ]]
 
-local t, err = template.compile(tmpl, { debug = true, newline = "" })
+local t, err = template.compile(tmpl, { debug = true, newline = true })
 local res, err, code = t:render()
 --print(res, err, code)
 assert(res == nil, "expected nil here because of the runtime error")
@@ -190,7 +213,7 @@ local tmpl = [[
 header: $(myParam)
 ]]
 
-local t, err = template.compile(tmpl, { debug = true, newline = "" })
+local t, err = template.compile(tmpl, { debug = true, newline = true })
 local myParam = {}
 local res, err, code = t:render( {myParam = myParam } ) -- insert a table
 --print(res, err, code)
@@ -209,7 +232,7 @@ local my_env = {
   ipairs = ipairs,
   T = {'one','two','three'}
 }
-local t, err, code = template.compile(tmpl, { debug = true, newline = "" })
+local t, err, code = template.compile(tmpl, { debug = true, newline = true })
 --print(t, err, code)
 assert(t==nil, "expected t to be nil here because of the syntax error")
 asserteq(type(err), "string")
@@ -239,7 +262,63 @@ asserteq(code, [[return "<ul>\
 <p>a paragraph</p>\
 <p>a paragraph</p>\
 </ul>\
-"]])
+";]])
+
+
+
+--------------------------------------------------
+-- Test template preserves line numbers, both when
+-- stripping and not stripping newlines
+local tmpl = [[
+# local function foo(x)
+  a$(x)b$(x + 1)c
+# return x + 2
+# end
+Hello
+there
+
+
+# foo(1)
+foo$(foo)bar
+# --
+]]
+local expected_num = select(2, string.gsub(tmpl, "\n", "\n"))
+
+-- Trailing newline, no newline stripping
+local t, err = template.compile(tmpl, { debug = true })
+local res, err, code = t:render(my_env)
+--print(res, err, code)
+
+assert(res, "rendering should not fail here")
+asserteq(select(2, string.gsub(code, "\n", "\n")), expected_num)
+
+-- Trailing newline, with newline stripping
+local t, err = template.compile(tmpl, { debug = true, newline = true })
+local res, err, code = t:render(my_env)
+--print(res, err, code)
+
+assert(res, "rendering should not fail here")
+asserteq(select(2, string.gsub(code, "\n", "\n")), expected_num)
+
+
+tmpl = string.sub(code, 1, -2) -- Remove the trailing newline
+-- num_expected remains unchanged because the template will append a trailing newline
+
+-- No trailing newline, no newline stripping
+local t, err = template.compile(tmpl, { debug = true })
+local res, err, code = t:render(my_env)
+--print(res, err, code)
+
+assert(res, "rendering should not fail here")
+asserteq(select(2, string.gsub(code, "\n", "\n")), expected_num)
+
+-- No trailing newline, with newline stripping
+local t, err = template.compile(tmpl, { debug = true, newline = true })
+local res, err, code = t:render(my_env)
+--print(res, err, code)
+
+assert(res, "rendering should not fail here")
+asserteq(select(2, string.gsub(code, "\n", "\n")), expected_num)
 
 
 print("template: success")

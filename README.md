@@ -1,10 +1,10 @@
 # Penlight Lua Libraries
 
-[![Travis-CI Status](https://travis-ci.org/lunarmodules/Penlight.svg?branch=master)](https://travis-ci.org/lunarmodules/Penlight)
-[![Coverage Status](https://coveralls.io/repos/github/lunarmodules/Penlight/badge.svg)](https://coveralls.io/github/lunarmodules/Penlight)
-[![AppVeyor status](https://ci.appveyor.com/api/projects/status/4jxg4ruktwi00up2/branch/master?svg=true)](https://ci.appveyor.com/project/Tieske/penlight-ta1gi/branch/master)
-
-
+[![Unix build](https://img.shields.io/github/workflow/status/lunarmodules/penlight/Unix%20build?label=Unix%20build&logo=linux)](https://github.com/lunarmodules/Penlight/actions)
+[![AppVeyor build status](https://img.shields.io/appveyor/build/Tieske/penlight-ta1gi/master?label=Windows%20build&logo=windows)](https://ci.appveyor.com/project/Tieske/penlight-ta1gi/branch/master)
+[![Coveralls code coverage](https://img.shields.io/coveralls/github/lunarmodules/Penlight?logo=coveralls)](https://coveralls.io/github/lunarmodules/Penlight)
+[![Luacheck](https://github.com/lunarmodules/Penlight/workflows/Luacheck/badge.svg)](https://github.com/lunarmodules/Penlight/actions)
+[![SemVer](https://img.shields.io/github/v/tag/lunarmodules/Penlight?color=brightgreen&label=SemVer&logo=semver&sort=semver)](CHANGELOG.md)
 
 ## Why a new set of libraries?
 
@@ -59,6 +59,37 @@ Python standard libraries.
    * `utils`: `utils.string_lambda` converts short strings like '|x| x^2' into functions
    * `comprehension`: list comprehensions: `C'x for x=1,4'()=={1,2,3,4}`
 
+## Versioning
+
+Penlight is strictly versioned according to [Semantic Versioning](https://semver.org/).
+
+In scope of the version:
+ * functionality provided by Penlight modules/classes
+ * based on stock Lua PuC-Rio or LuaJIT
+
+Not in scope of the version:
+ * Documentation
+ * Error messages (textual changes)
+ * Deprecation warnings (by default to `stderr`)
+
+### Deprecating functionality
+
+Any version may deprecate functionality. So new deprecation notices may appear
+in major, minor, and patch releases. Final removal of functionality (assuming it
+is a breaking change) will only be done in a major version.
+
+It is strongly suggested to use the deprecation warning mechanism to test usage
+of deprecated functionalities when upgrading. This is done by enabling the
+warning system (in Lua 5.4, or the Penlight compatibility function for earlier
+versions):
+
+```lua
+require "pl.compat"
+warn "@on"
+```
+
+See `pl.utils.raise_deprecation` for more info.
+
 ## License
 
 Penlight is distributed under the [MIT license](LICENSE.md).
@@ -73,7 +104,7 @@ for Lua for Windows.
 
 ## Dependencies
 
-The file and directory functions depend on [LuaFileSystem](https://keplerproject.github.io/luafilesystem/),
+The file and directory functions depend on [LuaFileSystem](https://lunarmodules.github.io/luafilesystem/),
 which is installed automatically if you are using LuaRocks. Additionally, if you want `dir.copyfile` to work
 elegantly on Windows, then you need [Alien](http://mascarenhas.github.io/alien/). Both libraries are present
 in Lua for Windows.

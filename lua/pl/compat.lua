@@ -165,7 +165,7 @@ end
 -- See `utils.unpack` for a version that is nil-safe.
 -- @param t table to unpack
 -- @param[opt] i index from which to start unpacking, defaults to 1
--- @param[opt] t index of the last element to unpack, defaults to #t
+-- @param[opt] j index of the last element to unpack, defaults to #t
 -- @return multiple return values from the table
 -- @function table.unpack
 -- @see utils.unpack
@@ -216,6 +216,37 @@ if not package.searchpath then
         end
         return nil, "\tno file '" .. table.concat(tried, "'\n\tno file '") .. "'"
     end
+end
+
+--- Global exported functions (for Lua < 5.4)
+-- @section lua54
+
+--- raise a warning message.
+-- This functions mimics the `warn` function added in Lua 5.4.
+-- @function warn
+-- @param ... any arguments
+if not rawget(_G, "warn") then
+    local enabled = false
+    local function warn(arg1, ...)
+        if type(arg1) == "string" and arg1:sub(1, 1) == "@" then
+            -- control message
+            if arg1 == "@on" then
+                enabled = true
+                return
+            end
+            if arg1 == "@off" then
+                enabled = false
+                return
+            end
+            return -- ignore unknown control messages
+        end
+        if enabled then
+          io.stderr:write("Lua warning: ", arg1, ...)
+          io.stderr:write("\n")
+        end
+    end
+    -- use rawset to bypass OpenResty's protection of global scope
+    rawset(_G, "warn", warn)
 end
 
 return compat

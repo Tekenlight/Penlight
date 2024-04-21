@@ -1,20 +1,179 @@
 # Changelog
 
+Versioning is strictly according to [Semantic Versioning](https://semver.org/),
+see the [README.md](README.md#versioning) for details on version scoping and
+deprecation policy.
+
 see [CONTRIBUTING.md](CONTRIBUTING.md#release-instructions-for-a-new-version) for release instructions
 
-## 1.9.1 (2020-09-24)
+## 1.14.0 (2024-Apr-15)
+ - fix(path): make `path.expanduser` more sturdy
+   [#469](https://github.com/lunarmodules/Penlight/pull/469)
+ - feat(func): extend `compose` to support N functions
+   [#448](https://github.com/lunarmodules/Penlight/pull/448)
+ - fix(utils) `nil` values in `utils.choose(cond, val1, val2)`
+   [#447](https://github.com/lunarmodules/Penlight/pull/447)
+ - fix(template) using `%` as an escape character caused the expression to not be recognized
+   [#452](https://github.com/lunarmodules/Penlight/pull/452)
+ - enhance(template): Preserve line numbers
+   [#468](https://github.com/lunarmodules/Penlight/pull/468)
+ - fix(pretty) integers for Lua 5.4
+   [#456](https://github.com/lunarmodules/Penlight/pull/456)
+
+## 1.13.1 (2022-Jul-22)
+ - fix: `warn` unquoted argument
+   [#439](https://github.com/lunarmodules/Penlight/pull/439)
+
+## 1.13.0 (2022-Jul-22)
+ - fix: `xml.parse` returned nonsense when given a file name
+   [#431](https://github.com/lunarmodules/Penlight/pull/431)
+ - feat: `app.require_here` now follows symlink'd main modules to their directory
+   [#423](https://github.com/lunarmodules/Penlight/pull/423)
+ - fix: `pretty.write` invalid order function for sorting
+   [#430](https://github.com/lunarmodules/Penlight/pull/430)
+ - fix: `compat.warn` raised write guard warning in OpenResty
+   [#414](https://github.com/lunarmodules/Penlight/pull/414)
+ - feat: `utils.enum` now accepts hash tables, to enable better error handling
+   [#413](https://github.com/lunarmodules/Penlight/pull/413)
+ - feat: `utils.kpairs` new iterator over all non-integer keys
+   [#413](https://github.com/lunarmodules/Penlight/pull/413)
+ - fix: `warn` use rawget to not trigger strict-checkers
+   [#437](https://github.com/lunarmodules/Penlight/pull/437)
+ - fix: `lapp` provides the file name when using the default argument
+   [#427](https://github.com/lunarmodules/Penlight/pull/427)
+ - fix: `lapp` positional arguments now allow digits after the first character
+   [#428](https://github.com/lunarmodules/Penlight/pull/428)
+ - fix: `path.isdir` windows root directories (including drive letter) were not considered valid
+   [#436](https://github.com/lunarmodules/Penlight/pull/436)
+
+
+## 1.12.0 (2022-Jan-10)
+ - deprecate: module `pl.text` the contents have moved to `pl.stringx` (removal later)
+   [#407](https://github.com/lunarmodules/Penlight/pull/407)
+ - deprecate: module `pl.xml`, please switch to a more specialized library (removal later)
+   [#409](https://github.com/lunarmodules/Penlight/pull/409)
+ - feat: `utils.npairs` added. An iterator with a range that honours the `n` field
+   [#387](https://github.com/lunarmodules/Penlight/pull/387)
+ - fix: `xml.maptags` would hang if it encountered text-nodes
+   [#396](https://github.com/lunarmodules/Penlight/pull/396)
+ - fix: `text.dedent` didn't handle declining indents nor empty lines
+   [#402](https://github.com/lunarmodules/Penlight/pull/402)
+ - fix: `dir.getfiles`, `dir.getdirectories`, and `dir.getallfiles` now have the
+   directory optional, as was already documented
+   [#405](https://github.com/lunarmodules/Penlight/pull/405)
+ - feat: `array2d.default_range` now also takes a spreadsheet range, which means
+   also other functions now take a range. [#404](https://github.com/lunarmodules/Penlight/pull/404)
+ - fix: `lapp` enums allow [patterns magic characters](https://www.lua.org/pil/20.2.html)
+   [#393](https://github.com/lunarmodules/Penlight/pull/393)
+ - fix: `text.wrap` and `text.fill` numerous fixes for handling whitespace,
+   accented characters, honouring width, etc.
+   [#400](https://github.com/lunarmodules/Penlight/pull/400)
+ - feat: `text.wrap` and `text.fill` have a new parameter to forcefully break words
+   longer than the width given.
+   [#400](https://github.com/lunarmodules/Penlight/pull/400)
+ - fix: `stringx.expandtabs` could error out on Lua 5.3+
+   [#406](https://github.com/lunarmodules/Penlight/pull/406)
+ - fix: `pl` the module would not properly forward the `newindex` metamethod
+   on the global table.
+   [#395](https://github.com/lunarmodules/Penlight/pull/395)
+ - feat: `utils.enum` added to create enums and prevent magic strings
+   [#408](https://github.com/lunarmodules/Penlight/pull/408)
+ - change: `xml.new` added some sanity checks on input
+   [#397](https://github.com/lunarmodules/Penlight/pull/397)
+ - added: `xml.xml_escape` and `xml.xml_unescape` functions (previously private)
+   [#397](https://github.com/lunarmodules/Penlight/pull/397)
+ - feat: `xml.tostring` now also takes numeric indents (previously only strings)
+   [#397](https://github.com/lunarmodules/Penlight/pull/397)
+ - fix: `xml.walk` now detects recursion (errors out)
+   [#397](https://github.com/lunarmodules/Penlight/pull/397)
+ - fix: `xml.clone` now detects recursion (errors out)
+   [#397](https://github.com/lunarmodules/Penlight/pull/397)
+ - fix: `xml.compare` now detects recursion (errors out)
+   [#397](https://github.com/lunarmodules/Penlight/pull/397)
+ - fix: `xml.compare` text compares now work
+   [#397](https://github.com/lunarmodules/Penlight/pull/397)
+ - fix: `xml.compare` attribute order compares now only compare if both inputs provide an order
+   [#397](https://github.com/lunarmodules/Penlight/pull/397)
+ - fix: `xml.compare` child comparisons failing now report proper error
+   [#397](https://github.com/lunarmodules/Penlight/pull/397)
+
+
+## 1.11.0 (2021-Aug-18)
+
+ - fix: `stringx.strip` behaved badly with string lengths > 200
+   [#382](https://github.com/lunarmodules/Penlight/pull/382)
+ - fix: `path.currentdir` now takes no arguments and calls `lfs.currentdir` without argument
+   [#383](https://github.com/lunarmodules/Penlight/pull/383)
+ - feat: `utils.raise_deprecation` now has an option to NOT include a
+   stack-trace [#385](https://github.com/lunarmodules/Penlight/pull/385)
+
+
+## 1.10.0 (2021-Apr-27)
+
+ - deprecate: `permute.iter`, renamed to `permute.order_iter` (removal later)
+   [#360](https://github.com/lunarmodules/Penlight/pull/360)
+ - deprecate: `permute.table`, renamed to `permute.order_table` (removal later)
+   [#360](https://github.com/lunarmodules/Penlight/pull/360)
+ - deprecate: `Date` module (removal later)
+   [#367](https://github.com/lunarmodules/Penlight/pull/367)
+ - feat: `permute.list_iter` to iterate over different sets of values
+   [#360](https://github.com/lunarmodules/Penlight/pull/360)
+ - feat: `permute.list_table` generate table with different sets of values
+   [#360](https://github.com/lunarmodules/Penlight/pull/360)
+ - feat: Lua 5.4 'warn' compatibility function
+   [#366](https://github.com/lunarmodules/Penlight/pull/366)
+ - feat: deprecation functionality `utils.raise_deprecation`
+   [#361](https://github.com/lunarmodules/Penlight/pull/361)
+ - feat: `utils.splitv` now takes same args as `split`
+   [#373](https://github.com/lunarmodules/Penlight/pull/373)
+ - fix: `dir.rmtree` failed to remove symlinks to directories
+   [#365](https://github.com/lunarmodules/Penlight/pull/365)
+ - fix: `pretty.write` could error out on failing metamethods (Lua 5.3+)
+   [#368](https://github.com/lunarmodules/Penlight/pull/368)
+ - fix: `app.parse` now correctly parses values containing '=' or ':'
+   [#373](https://github.com/lunarmodules/Penlight/pull/373)
+ - fix: `dir.makepath` failed to create top-level directories
+   [#372](https://github.com/lunarmodules/Penlight/pull/372)
+ - overhaul: `array2d` module was updated, got additional tests and several
+   documentation updates
+   [#377](https://github.com/lunarmodules/Penlight/pull/377)
+ - feat: `array2d` now accepts negative indices
+ - feat: `array2d.row` added to align with `column`
+ - fix: bad error message in `array2d.map`
+ - fix: `array2d.flatten` now ensures to deliver a 'square' result if `nil` is
+   encountered
+ - feat: `array2d.transpose` added
+ - feat: `array2d.swap_rows` and `array2d.swap_cols` now return the array
+ - fix: `array2d.range` correctly recognizes `R` column in spreadsheet format, was
+   mistaken for `R1C1` format.
+ - fix: `array2d.range` correctly recognizes 2 char column in spreadsheet format
+ - feat: `array2d.default_range` added (previously private)
+ - feat: `array2d.set` if used with a function now passes `i,j` to the function
+   in line with the `new` implementation.
+ - fix: `array2d.iter` didn't properly iterate the indices
+   [#376](https://github.com/lunarmodules/Penlight/issues/376)
+ - feat: `array2d.columns` now returns a second value; the column index
+ - feat: `array2d.rows` added to be in line with `columns`
+
+
+## 1.9.2 (2020-Sep-27)
+
+ - fix: dir.walk [#350](https://github.com/lunarmodules/Penlight/pull/350)
+
+
+## 1.9.1 (2020-Sep-24)
 
  - released to superseed the 1.9.0 version which was retagged in git after some
    distro's already had picked it up. This version is identical to 1.8.1.
 
-## 1.8.1 (2020-09-24) (replacing a briefly released but broken 1.9.0 version)
+## 1.8.1 (2020-Sep-24) (replacing a briefly released but broken 1.9.0 version)
 
 ## Fixes
 
   - In `pl.class`, `_init` can now be inherited from grandparent (or older ancestor) classes. [#289](https://github.com/lunarmodules/Penlight/pull/289)
   - Fixes `dir`, `lexer`, and `permute` to no longer use coroutines. [#344](https://github.com/lunarmodules/Penlight/pull/344)
 
-## 1.8.0 (2020-08-05)
+## 1.8.0 (2020-Aug-05)
 
 ### New features
 
@@ -44,13 +203,13 @@ see [CONTRIBUTING.md](CONTRIBUTING.md#release-instructions-for-a-new-version) fo
   - Fix: the lexer would not recognize numbers without leading zero; "-.123".
     See [#315](https://github.com/lunarmodules/Penlight/issues/315)
 
-## 1.7.0 (2019-10-14)
+## 1.7.0 (2019-Oct-14)
 
 ### New features
 
   - `utils.quote_arg` will now optionally take an array of arguments and escape
     them all into a single string.
-  - `app.parse_args` now accepts a 3rd parameter with a list of valid flags and aliasses
+  - `app.parse_args` now accepts a 3rd parameter with a list of valid flags and aliases
   - `app.script_name` returns the name of the current script (previously a private function)
 
 ### Changes
@@ -79,7 +238,7 @@ see [CONTRIBUTING.md](CONTRIBUTING.md#release-instructions-for-a-new-version) fo
   - added a missing assertion on `path.getmtime` [#291](https://github.com/lunarmodules/Penlight/pull/291)
   - `stringx.rpartition` returned bad results on a not-found [#299](https://github.com/lunarmodules/Penlight/pull/299)
 
-## 1.6.0 (2018-11-23)
+## 1.6.0 (2018-Nov-23)
 
 ### New features
 
@@ -213,7 +372,7 @@ see [CONTRIBUTING.md](CONTRIBUTING.md#release-instructions-for-a-new-version) fo
 
 ### Fixes
 
-  - func was broken: do NOT use ipairs to iterate if __index is overriden!
+  - func was broken: do NOT use ipairs to iterate if __index is overridden!
   - issue #133 pretty.read (naively) confused by unbalanced brackets
   - xml attribute underscore fix for simple parser
   - Fix path.normpath
@@ -338,7 +497,7 @@ particularly convenient for using from Moonscript.
 - array2d.product was broken; more sensible implementation
 - array2d.range, .slice, .write were broken
 - text optional operator % overload broken for 'fmt % fun'; new tests
-- a few occurances of non-existent function utils.error removed
+- a few occurrences of non-existent function utils.error removed
 
 
 ## 0.9.6 (2011-09-11)

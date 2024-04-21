@@ -24,7 +24,11 @@ end
 
 -- path.isdir
 asserteq( path.isdir( "docs" ), true )
+asserteq( path.isdir( "docs/" ), true )
 asserteq( path.isdir( "docs/index.html" ), false )
+asserteq( path.isdir( path.currentdir() ), true)
+asserteq( path.isdir( "c:\\" ), path.is_windows )
+asserteq( path.isdir( "c:/" ), path.is_windows )
 
 -- path.isfile
 asserteq( path.isfile( "docs" ), false )
@@ -174,8 +178,6 @@ do  --  path.relpath
   try('../two.lua','../two.lua')
 end
 
-
--- TODO: path.expanduser
 
 -- TODO: path.tmpname
 

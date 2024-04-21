@@ -1,43 +1,9 @@
 local test = require 'pl.test'
-local app = require 'pl.app'
-local utils = require 'pl.utils'
 local asserteq, assertmatch = test.asserteq, test.assertmatch
 local dump = require 'pl.pretty'.dump
 local T = require 'pl.test'.tuple
 
 local Date = require 'pl.Date'
-
---[[
-d = Date()
-print(d)
-print(d:year())
-d:day(20)
-print(d)
-d:add {day = 2}
-print(d:day())
-d = Date() -- 'now'
-print(d:last_day():day())
-print(d:month(7):last_day())
---]]
-
-function check_df(fmt,str,no_check)
-    local df = Date.Format(fmt)
-    local d = df:parse(str)
-    --print(str,d)
-    if not no_check then
-        asserteq(df:tostring(d),str)
-    end
-end
-
-check_df('dd/mm/yy','02/04/10')
-check_df('mm/dd/yyyy','04/02/2010')
-check_df('yyyy-mm-dd','2011-02-20')
-check_df('yyyymmdd','20070320')
-
--- use single fields for 'slack' parsing
-check_df('m/d/yyyy','1/5/2001',true)
-
-check_df('HH:MM','23:10')
 
 iso = Date.Format 'yyyy-mm-dd' -- ISO date
 d = iso:parse '2010-04-10'
@@ -119,10 +85,3 @@ asserteq(tostring(nxt - d), '1 month ')
 --- Can explicitly get UTC date; these of course refer to same time
 local now,utc  = Date(), Date 'utc'
 asserteq(tostring(now - utc),'zero')
-
-if app.platform() ~= 'Windows' then
-    print(app.lua())
-    if not utils.execute ("TZ='Europe/London' "..app.lua().." tests/test-date2.lua") then
-        error "buggered!"
-    end
-end

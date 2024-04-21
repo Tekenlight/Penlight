@@ -2,6 +2,7 @@ local app = require "pl.app"
 local utils = require "pl.utils"
 local path = require "pl.path"
 local asserteq = require 'pl.test'.asserteq
+local lfs = require("lfs")
 
 local quote = utils.quote_arg
 
@@ -117,6 +118,32 @@ do  -- app.require_here
     stdout = path.normcase(stdout)
     asserteq(stdout, path.normcase("/fixed/?.lua;/fixed/?/init.lua;\n"))
 
+    -- symlinked script, check that we look beside the target of the link
+    -- -- step 1: find ourselves
+    local self = app.script_name()
+    if not path.isabs(self) then self = path.join(cd,self) end
+    local tadir = path.normcase(path.join(path.dirname(self),"test-app"))
+    -- -- step 2: create a link to our helper script
+    local scrl = path.tmpname()
+    local linkdir = path.normcase(path.dirname(scrl))
+    os.remove(scrl)
+    assert(lfs.link(path.join(tadir,"require_here-link-target.lua"), scrl, true))
+    -- -- step 3: check that we look next to ourselves
+    local success, code, stdout, stderr = utils.executeex(cmd.." "..scrl)
+    stdout = path.normcase(stdout)
+    assert(stdout:find(path.normcase(path.join(tadir, "?.lua;")), 1, true))
+    assert(stdout:find(path.normcase(path.join(tadir, "?/init.lua;")), 1, true))
+    assert(not stdout:find(path.normcase(path.join(linkdir, "?.lua;")), 1, true))
+    assert(not stdout:find(path.normcase(path.join(linkdir, "?/init.lua;")), 1, true))
+    -- -- step 4: ... but not if we turn on nofollow
+    local success, code, stdout, stderr = utils.executeex(cmd.." "..scrl.." x")
+    stdout = path.normcase(stdout)
+    assert(not stdout:find(path.normcase(path.join(tadir, "?.lua;")), 1, true))
+    assert(not stdout:find(path.normcase(path.join(tadir, "?/init.lua;")), 1, true))
+    assert(stdout:find(path.normcase(path.join(linkdir, "?.lua;")), 1, true))
+    assert(stdout:find(path.normcase(path.join(linkdir, "?/init.lua;")), 1, true))
+    os.remove(scrl)
+
 end
 
 
@@ -178,6 +205,13 @@ do -- app.parse_args
     asserteq(s, {})
 
 
+    -- flag_with_values missing value at end
+    local args = utils.split("-a -b")
+    local t,s = app.parse_args(args, { "b" })
+    asserteq(t, nil)
+    asserteq(s, "no value for 'b'")
+
+
     -- error on an unknown flag
     local args = utils.split("-a -b value -c")
     local t,s = app.parse_args(args, { b = true }, { "b", "c" })
@@ -191,6 +225,17 @@ do -- app.parse_args
     asserteq(t, {
        ["a"] = true,
        ["b"] = "value"
+    })
+    asserteq(s, {})
+
+
+    -- correctly parsed values, spaces, :, =, and multiple : or =
+    local args = utils.split("-a value -b value:one=two -c=value2:2")
+    local t,s = app.parse_args(args, { "a", "b", "c" })
+    asserteq(t, {
+       ["a"] = "value",
+       ["b"] = "value:one=two",
+       ["c"] = "value2:2",
     })
     asserteq(s, {})
 
@@ -222,7 +267,7 @@ do -- app.parse_args
       }, s)
 
 
-    -- specify valid flags and aliasses
+    -- specify valid flags and aliases
     local args = utils.split("-a -b value -e -f3")
     local t,s = app.parse_args(args,
       {
@@ -231,7 +276,7 @@ do -- app.parse_args
       }, {
         bully = "b",   -- b with value will be reported as 'bully', alias as string
         a = true,      -- hash-type value
-        c = { "d", "e" }, -- e will be reported as c, aliasses as list/table
+        c = { "d", "e" }, -- e will be reported as c, aliases as list/table
       })
     asserteq(t, {
         a = true,
@@ -260,4 +305,3 @@ do -- app.parse_args
     asserteq(s, {})
 
 end
-

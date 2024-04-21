@@ -2,6 +2,8 @@
 
 <a id="date"></a>
 
+NOTE: the Date module is deprecated
+
 ### Creating and Displaying Dates
 
 The `Date` class provides a simplified way to work with [date and
@@ -41,7 +43,7 @@ you full control of the format for both parsing and displaying dates:
     > = amer:tostring(d)
     04/10/2010
 
-With the 0.9.7 relase, the `Date` constructor has become more flexible. You may
+With the 0.9.7 release, the `Date` constructor has become more flexible. You may
 omit any of the 'year', 'month' or 'day' fields:
 
     > = Date { year = 2008 }

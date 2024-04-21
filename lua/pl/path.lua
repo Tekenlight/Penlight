@@ -32,6 +32,18 @@ local link_attrib = lfs.symlinkattributes
 
 local path = {}
 
+local function err_func(name, param, err, code)
+  local ret = ("%s failed"):format(tostring(name))
+  if param ~= nil then
+    ret = ret .. (" for '%s'"):format(tostring(param))
+  end
+  ret = ret .. (": %s"):format(tostring(err))
+  if code ~= nil then
+    ret = ret .. (" (code %s)"):format(tostring(code))
+  end
+  return ret
+end
+
 --- Lua iterator over the entries of a given directory.
 -- Implicit link to [`luafilesystem.dir`](https://keplerproject.github.io/luafilesystem/manual.html#reference)
 -- @function dir
@@ -40,42 +52,75 @@ path.dir = lfs.dir
 --- Creates a directory.
 -- Implicit link to [`luafilesystem.mkdir`](https://keplerproject.github.io/luafilesystem/manual.html#reference)
 -- @function mkdir
-path.mkdir = lfs.mkdir
+path.mkdir = function(d)
+  local ok, err, code = lfs.mkdir(d)
+  if not ok then
+    return ok, err_func("mkdir", d, err, code), code
+  end
+  return ok, err, code
+end
 
 --- Removes a directory.
 -- Implicit link to [`luafilesystem.rmdir`](https://keplerproject.github.io/luafilesystem/manual.html#reference)
 -- @function rmdir
-path.rmdir = lfs.rmdir
+path.rmdir = function(d)
+  local ok, err, code = lfs.rmdir(d)
+  if not ok then
+    return ok, err_func("rmdir", d, err, code), code
+  end
+  return ok, err, code
+end
 
 --- Gets attributes.
 -- Implicit link to [`luafilesystem.attributes`](https://keplerproject.github.io/luafilesystem/manual.html#reference)
 -- @function attrib
-path.attrib = attrib
+path.attrib = function(d, r)
+  local ok, err, code = attrib(d, r)
+  if not ok then
+    return ok, err_func("attrib", d, err, code), code
+  end
+  return ok, err, code
+end
 
 --- Get the working directory.
 -- Implicit link to [`luafilesystem.currentdir`](https://keplerproject.github.io/luafilesystem/manual.html#reference)
 -- @function currentdir
-path.currentdir = currentdir
+path.currentdir = function()
+  local ok, err, code = currentdir()
+  if not ok then
+    return ok, err_func("currentdir", nil, err, code), code
+  end
+  return ok, err, code
+end
 
 --- Gets symlink attributes.
 -- Implicit link to [`luafilesystem.symlinkattributes`](https://keplerproject.github.io/luafilesystem/manual.html#reference)
 -- @function link_attrib
-path.link_attrib = link_attrib
+path.link_attrib = function(d, r)
+  local ok, err, code = link_attrib(d, r)
+  if not ok then
+    return ok, err_func("link_attrib", d, err, code), code
+  end
+  return ok, err, code
+end
 
 --- Changes the working directory.
 -- On Windows, if a drive is specified, it also changes the current drive. If
 -- only specifying the drive, it will only switch drive, but not modify the path.
 -- Implicit link to [`luafilesystem.chdir`](https://keplerproject.github.io/luafilesystem/manual.html#reference)
 -- @function chdir
-path.chdir = lfs.chdir
+path.chdir = function(d)
+  local ok, err, code = lfs.chdir(d)
+  if not ok then
+    return ok, err_func("chdir", d, err, code), code
+  end
+  return ok, err, code
+end
 
 --- is this a directory?
 -- @string P A file path
 function path.isdir(P)
     assert_string(1,P)
-    if P:match("\\$") then
-        P = P:sub(1,-2)
-    end
     return attrib(P,'mode') == 'directory'
 end
 
@@ -205,7 +250,7 @@ function path.abspath(P,pwd)
     assert_string(1,P)
     if pwd then assert_string(2,pwd) end
     local use_pwd = pwd ~= nil
-    if not use_pwd and not currentdir then return P end
+    if not use_pwd and not currentdir() then return P end
     P = P:gsub('[\\/]$','')
     pwd = pwd or currentdir()
     if not path.isabs(P) then
@@ -448,17 +493,35 @@ end
 -- In windows, if HOME isn't set, then USERPROFILE is used in preference to
 -- HOMEDRIVE HOMEPATH. This is guaranteed to be writeable on all versions of Windows.
 -- @string P A file path
+-- @treturn[1] string The file path with the `~` prefix substituted, or the input path if it had no prefix.
+-- @treturn[2] nil
+-- @treturn[2] string Error message if the environment variables were unavailable.
 function path.expanduser(P)
     assert_string(1,P)
-    if at(P,1) == '~' then
-        local home = getenv('HOME')
-        if not home then -- has to be Windows
-            home = getenv 'USERPROFILE' or (getenv 'HOMEDRIVE' .. getenv 'HOMEPATH')
-        end
-        return home..sub(P,2)
-    else
+    if P:sub(1,1) ~= '~' then
         return P
     end
+
+    local home = getenv('HOME')
+    if (not home) and (not path.is_windows) then
+        -- no more options to try on Nix
+        return nil, "failed to expand '~' (HOME not set)"
+    end
+
+    if (not home) then
+        -- try alternatives on Windows
+        home = getenv 'USERPROFILE'
+        if not home then
+            local hd = getenv 'HOMEDRIVE'
+            local hp = getenv 'HOMEPATH'
+            if not (hd and hp) then
+              return nil, "failed to expand '~' (HOME, USERPROFILE, and HOMEDRIVE and/or HOMEPATH not set)"
+            end
+            home = hd..hp
+        end
+    end
+
+    return home..sub(P,2)
 end
 
 
