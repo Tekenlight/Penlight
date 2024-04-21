@@ -74,8 +74,8 @@ function tablex.has_elements (t)
     assert_arg_iterable(1,t)
     local i = 0
     for k in pairs(t) do
-		i = i + 1
-		break;
+		i = i + 1;
+		if (i > 0) then break; end
 	end
     local ret = false;
 	if (i>0) then ret = true; else ret = false; end
